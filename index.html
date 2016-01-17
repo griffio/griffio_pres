@@ -67,46 +67,39 @@
             <section>
                 <h2>Encoding vs Sanitising</h2>
 
-                <p><b>Encoding</b> or escaping content is to make it structurally compatible with the output</p>
+                <p><b>Encoding</b> or escaping content to make it structurally compatible with the output</p>
 
-                <p><b>Sanitise</b> content, ideally, against a white-list prior to output</p>
+                <p><b>Sanitise</b> content, ideally, against a white-list to strip out non-compliant data</p>
 
-                <p>There has to be some understanding of contextual data - Google maps blurring out faces and license
-                    plates; html or css</p>
+                <p>There has to be some contextual understanding of the data <small><a href="https://griffio.github.io/tech/2015/02/12/Html-Sanitising/">griffio - Html Sanitising</a></small></p>
             </section>
             <section data-background-transition="slide" data-background="assets/encoded.jpg">
                 <h2 style="color: yellow">Exploitable data is escaped</h2>
             </section>
             <section data-background-transition="slide" data-background="assets/sanitised.jpg">
-                <h2 style="color: darkred">Prohibited data is removed</h2>
+                <h2 style="color: darkred">Prohibited data is sanitised</h2>
             </section>
 
         </section>
 
         <section>
-            <h2>The Problem</h2>
+            <h2>The Problem Space</h2>
 
-            <p> Hundreds of Java Server Page (JSP) templates containing dynamic variables from mixed sources.</p>
+            <p>Application has hundreds of Java Server Page (JSP) templates containing dynamic variables from mixed sources</p>
 
             <h3>Imagine...</h3>
 
-            <p>A ticking time-bomb of potential exploits that needed to be defused!</p>
+            <p>A ticking time-bomb of potential exploits that needed to be defused before it can be used for tokens!</p>
 
         </section>
 
         <section>
             <h2>Making Wrong Code Look Wrong</h2>
 
-            <p>Only when a developer follows the best practices will there never be injection exploit added.
-
+            <p>Exploits are avoided only with developers following best practices all the time
             <p>
 
-            <p>Data is stored under the principle that it is not encoded until the very last moment before they are sent
-                to the specific output.</p>
-
-            <p>Example: Dates are stored in a canonical way so that a user agent will display it according to the
-                current locale.</p>
-
+            <p>Some convention is needed to determine right from wrong</p>
             <p>
                 <small><a href="http://www.joelonsoftware.com/articles/Wrong.html">joel on software</a></small>
             </p>
@@ -115,40 +108,34 @@
         <section>
             <h2>Safe or Unsafe</h2>
 
-            <p>When I’m looking at a string, in order to get the code right, I need to know, everywhere I see that
-                string, whether it’s safe or unsafe.
+            <p>whether it’s safe or unsafe.
 
             <p>
 
-            <p>Enforce white-list of allowable content through Policies and produce trusted markup</p>
+            <p>Enforce a white-list of allowable content through Policies and produce trusted markup</p>
 
-            <pre><code data-trim contenteditable class="hljs java">
-                String untrustedHTML = "&lt;p...&lt;script...&lt;a href=...";
-                PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-                HtmlSafe trustedHTML = HtmlSafe.from(policy.sanitize(untrustedHTML));
+            <pre><code data-trim class="hljs java">
+String unsafe = "&lt;p...&lt;script...&lt;a href=...";
+PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+HtmlSafe safe = HtmlSafe.from(policy.sanitize(unsafe));
             </code></pre>
 
             <p>This is baked into the template system that only HtmlSafe types can be rendered without encoding</p>
 
             <p>The developers compliance to best practice doesn't have to be assumed and cannot be circumvented</p>
 
-            <p>Any values that are intentionally html are sanitised, otherwise encode</p>
-            <pre><code data-trim contenteditable class="hljs txt">
-                if value startsWith "<"
-                return HtmlSafe(value)
-                else
-                return Encode(value)
-            </code></pre>
-
-            <p>Allow HTML authored by third-parties into your web application while protecting against XSS.
+            <p>Any values that are intentionally html are sanitised otherwise encode</p>
+ </section>           
+<section>
+            <p>Allow HTML authored by third-parties into your web application while protecting against XSS
                 <a href="https://github.com/owasp/java-html-sanitizer">OWASP Java HTML Sanitizer</a></p>
 
             <p>Java Types</p>
             <p>types and type contracts in use</p>
 
- <pre><code data-trim contenteditable class="hljs html">
-     String unsafe = "<p>Can be anything script alert('boo!')script</p>
-     HtmlSafe safe = "<p>Only what we explicitly allow</p>"
+ <pre><code data-trim class="hljs html">
+String unsafe = "<p>Can be anything script alert('boo!')script</p>
+HtmlSafe safe = "<p>Only what we explicitly allow</p>"
  </code></pre>
             <p>Therefore values are either Safe or UnSafe</p>
 
@@ -159,19 +146,19 @@
         <section>
             <h2>XSS - Cross site scripting</h2>
 
-            <p>Exploitation of XSS results in complete compromise of the victim's session (temporary or persistent)
+            <p>Exploitation of XSS results in complete compromise of the victim's session (temporarily or persistent)
                 within the subverted application</p>
 
-            <p>If an attacker can access your browser environment then other attacks are now possible</p>
+
+<pre><code data-trim class="hljs html">The attacker enters bob" onmouseover="alert(1) as their name
+<a href="/user/[username]">[username]</a>
+Resulting as rendered by the template
+<a href="/user/bob" onmouseover="alert(1)"></a>
+		            </code></pre>
+            <p>If an attacker can access your browser environment then other attacks are now possible like XSRF</p>
 
             <p>
-            <pre><code data-trim contenteditable class="hljs js">
-                The attacker enters foo" onmouseover="alert(1) as their username.
-                <a href="/user/[username]">[username]</a>
-                End result, even after escaping:
-                <a href="/user/foo" onmouseover="alert(1)"></a>
-                <img onload='alert(1)' src='/favicon.ico'/>
-            </code></pre>
+            
             <p>
                 <small><a href=""></a></small>
             </p>
@@ -179,11 +166,11 @@
         <section>
             <h2>Bearer Tokens</h2>
 
-            <p>Like the money in your wallet, once stolen, <b>tokens</b> can be spent without provenance</p>
+            <p>Like the money in your wallet, once stolen, <b>tokens</b> can be used without provenance</p>
 
             <h3></h3>
 
-            <p>Stay Vigilant!</p>
+            <p>XSS is always a threat. Stay Vigilant!</p>
 
             <p>
                 <small><a href="https://auth0.com/blog/2014/01/27/ten-things-you-should-know-about-tokens-and-cookies/">ten-things-you-should-know-about-tokens-and-cookies</a>
