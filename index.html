@@ -56,12 +56,11 @@
             <h2>Injection - The Phantom Menace</h2>
 
             <p>Input originating from untrusted sources must be integrated such that it cannot control the output
-                programmatically.</p>
+                programmatically</p>
 
             <p>
                 <small><a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP</a></small>
             </p>
-
         </section>
 
         <section>
@@ -70,7 +69,7 @@
 
                 <p><b>Encoding</b> or escaping content is to make it structurally compatible with the output</p>
 
-                <p><b>Sanitise</b> content against a white-list prior to output</p>
+                <p><b>Sanitise</b> content, ideally, against a white-list prior to output</p>
 
                 <p>There has to be some understanding of contextual data - Google maps blurring out faces and license
                     plates; html or css</p>
@@ -91,11 +90,8 @@
 
             <h3>Imagine...</h3>
 
-            <p>A ticking time-bomb* of potential exploits that needed to be defused!</p>
+            <p>A ticking time-bomb of potential exploits that needed to be defused!</p>
 
-            <p>
-                <small>*user experience bomb</small>
-            </p>
         </section>
 
         <section>
@@ -124,16 +120,49 @@
 
             <p>
 
-            <p></p>
+            <p>Enforce white-list of allowable content through Policies and produce trusted markup</p>
 
-            <p></p>
+            <pre><code data-trim contenteditable class="hljs java">
+                String untrustedHTML = "&lt;p...&lt;script...&lt;a href=...";
+                PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+                HtmlSafe trustedHTML = HtmlSafe.from(policy.sanitize(untrustedHTML));
+            </code></pre>
+
+            <p>This is baked into the template system that only HtmlSafe types can be rendered without encoding</p>
+
+            <p>The developers compliance to best practice doesn't have to be assumed and cannot be circumvented</p>
+
+            <p>Any values that are intentionally html are sanitised, otherwise encode</p>
+            <pre><code data-trim contenteditable class="hljs txt">
+                if value startsWith "<"
+                return HtmlSafe(value)
+                else
+                return Encode(value)
+            </code></pre>
+
+            <p>Allow HTML authored by third-parties into your web application while protecting against XSS.
+                <a href="https://github.com/owasp/java-html-sanitizer">OWASP Java HTML Sanitizer</a></p>
+
+            <p>Java Types</p>
+            <p>types and type contracts in use</p>
+
+ <pre><code data-trim contenteditable class="hljs html">
+     String unsafe = "<p>Can be anything script alert('boo!')script</p>
+     HtmlSafe safe = "<p>Only what we explicitly allow</p>"
+ </code></pre>
+            <p>Therefore values are either Safe or UnSafe</p>
 
             <p>
                 <small><a href=""></a></small>
             </p>
         </section>
         <section>
-            <h2>XSS</h2>
+            <h2>XSS - Cross site scripting</h2>
+
+            <p>Exploitation of XSS results in complete compromise of the victim's session (temporary or persistent)
+                within the subverted application</p>
+
+            <p>If an attacker can access your browser environment then other attacks are now possible</p>
 
             <p>
             <pre><code data-trim contenteditable class="hljs js">
@@ -143,12 +172,24 @@
                 <a href="/user/foo" onmouseover="alert(1)"></a>
                 <img onload='alert(1)' src='/favicon.ico'/>
             </code></pre>
-            <p></p>
             <p>
                 <small><a href=""></a></small>
             </p>
         </section>
+        <section>
+            <h2>Bearer Tokens</h2>
 
+            <p>Like the money in your wallet, once stolen, <b>tokens</b> can be spent without provenance</p>
+
+            <h3></h3>
+
+            <p>Stay Vigilant!</p>
+
+            <p>
+                <small><a href="https://auth0.com/blog/2014/01/27/ten-things-you-should-know-about-tokens-and-cookies/">ten-things-you-should-know-about-tokens-and-cookies</a>
+                </small>
+            </p>
+        </section>
     </div>
 
 </div>
