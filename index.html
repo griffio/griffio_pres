@@ -45,7 +45,7 @@
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
         <section>
-            <h2>Encoding and Sanitising Data</h2>
+            <h2>Encoding and Sanitizing Data</h2>
 
             <p>
                 <small>Created by <a href="https://github.com/griffio">griffio</a></small>
@@ -53,31 +53,31 @@
         </section>
 
         <section>
-            <h2>Injection - The Phantom Menace</h2>
+            <h2>The Phantom Menace</h2>
 
             <p>Input originating from untrusted sources must be integrated such that it cannot control the output
                 programmatically</p>
 
             <p>
-                <small><a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP</a></small>
+                <small><a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP A1-Injection</a></small>
             </p>
         </section>
 
         <section>
             <section>
-                <h2>Encoding vs Sanitising</h2>
+                <h2>Encoding vs Sanitizing</h2>
 
                 <p><b>Encoding</b> or escaping content to make it structurally compatible with the output</p>
 
-                <p><b>Sanitise</b> content, ideally, against a white-list to strip out non-compliant data</p>
+                <p><b>Sanitize</b> content, ideally, against a white-list to strip out non-compliant data</p>
 
-                <p>There has to be some contextual understanding of the data <small><a href="https://griffio.github.io/tech/2015/02/12/Html-Sanitising/">griffio - Html Sanitising</a></small></p>
+                <p>There has to be some contextual understanding of the data <small><a href="https://griffio.github.io/tech/2015/02/12/Html-Sanitising/">griffio - Html sanitizing</a></small></p>
             </section>
             <section data-background-transition="slide" data-background="assets/encoded.jpg">
                 <h2 style="color: yellow">Exploitable data is escaped</h2>
             </section>
-            <section data-background-transition="slide" data-background="assets/sanitised.jpg">
-                <h2 style="color: darkred">Prohibited data is sanitised</h2>
+            <section data-background-transition="slide" data-background="assets/sanitized.jpg">
+                <h2 style="color: darkred">Prohibited data is sanitized</h2>
             </section>
 
         </section>
@@ -96,12 +96,28 @@
         <section>
             <h2>Making Wrong Code Look Wrong</h2>
 
-            <p>Exploits are avoided only with developers following best practices all the time
+            <p>Exploits are avoided by developers following best practices all the time
             <p>
 
             <p>Some convention is needed to determine right from wrong</p>
             <p>
                 <small><a href="http://www.joelonsoftware.com/articles/Wrong.html">joel on software</a></small>
+            </p>
+        </section>
+
+        <section>
+            <h2>Java HTML Sanitizer</h2>
+            <p>Allow HTML authored by third-parties into your web application while protecting against XSS</p>
+            <p><small><a href="https://github.com/owasp/java-html-sanitizer">OWASP Java HTML Sanitizer</a></small></p>
+
+ <pre><code data-trim class="hljs html">
+String unsafe = "&ltp&gtCan be anything &lt;script&gt;alert('Boo!')&lt;/script&gt;&lt/p&gt
+HtmlSafe safe = "&ltp&gtOnly what we explicitly allow&lt/p&gt"
+ </code></pre>
+            <p>Therefore values are either Safe or UnSafe</p>
+
+            <p>
+                <small><a href=""></a></small>
             </p>
         </section>
 
@@ -124,25 +140,10 @@ HtmlSafe safe = HtmlSafe.from(policy.sanitize(unsafe));
 
             <p>The developers compliance to best practice doesn't have to be assumed and cannot be circumvented</p>
 
-            <p>Any values that are intentionally html are sanitised otherwise encode</p>
- </section>           
-<section>
-            <p>Allow HTML authored by third-parties into your web application while protecting against XSS
-                <a href="https://github.com/owasp/java-html-sanitizer">OWASP Java HTML Sanitizer</a></p>
+            <p>The primary goal of this approach is to limit code that could potentially give rise to XSS vulnerabilities to a very small fraction of a code base</p>
 
-            <p>Java Types</p>
-            <p>types and type contracts in use</p>
-
- <pre><code data-trim class="hljs html">
-String unsafe = "<p>Can be anything script alert('boo!')script</p>
-HtmlSafe safe = "<p>Only what we explicitly allow</p>"
- </code></pre>
-            <p>Therefore values are either Safe or UnSafe</p>
-
-            <p>
-                <small><a href=""></a></small>
-            </p>
-        </section>
+            <p>Any values that are intentionally html are sanitized otherwise encode</p>
+ </section>
         <section>
             <h2>XSS - Cross site scripting</h2>
 
@@ -168,9 +169,7 @@ Resulting as rendered by the template
 
             <p>Like the money in your wallet, once stolen, <b>tokens</b> can be used without provenance</p>
 
-            <h3></h3>
-
-            <p>XSS is always a threat. Stay Vigilant!</p>
+            <p>XSS is always a threat. Stay vigilant!</p>
 
             <p>
                 <small><a href="https://auth0.com/blog/2014/01/27/ten-things-you-should-know-about-tokens-and-cookies/">ten-things-you-should-know-about-tokens-and-cookies</a>
